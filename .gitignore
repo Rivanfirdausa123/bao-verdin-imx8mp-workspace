@@ -1,0 +1,44 @@
+# Build output
+**/build/
+**/output/
+**/tmp/
+
+# Download/cache
+**/downloads/
+**/dl/
+**/sstate-cache/
+
+# Git metadata from imported source trees
+**/.git/
+**/.repo/
+
+# Binary/build artifacts
+*.o
+*.a
+*.so
+*.ko
+*.elf
+*.bin
+*.dtb
+*.dtbo
+*.wic
+*.wic.gz
+*.img
+*.map
+*.cpio
+*.cpio.gz
+*.tar
+*.tar.gz
+*.tar.xz
+*.tar.zst
+
+# Logs
+*.log
+
+# Editor
+.vscode/
+.idea/
+
+# Temporary files
+*.swp
+*~

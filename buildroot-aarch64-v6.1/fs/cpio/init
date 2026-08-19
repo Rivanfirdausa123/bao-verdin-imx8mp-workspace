@@ -1,0 +1,30 @@
+#!/bin/sh
+set -e
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+echo "[initramfs] mount virtual filesystems..."
+mount -t proc proc /proc 2>/dev/null || true
+mount -t sysfs sysfs /sys 2>/dev/null || true
+mount -t devtmpfs devtmpfs /dev 2>/dev/null || true
+mount -t devpts devpts /dev/pts 2>/dev/null || true
+mount -t tmpfs tmpfs /run 2>/dev/null || true
+
+echo "[initramfs] starting real init..."
+
+# PATH NORMAL BUILDROOT —> /sbin/init
+if [ -x /sbin/init ]; then
+    exec /sbin/init
+fi
+
+# fallback busybox init (jika /sbin/init tidak ada)
+if [ -x /bin/busybox ]; then
+    exec /bin/busybox init
+fi
+
+# fallback shell
+if [ -x /bin/sh ]; then
+    exec /bin/sh -i
+fi
+
+echo "[initramfs] ERROR: Tidak menemukan init"
+exec sh -i

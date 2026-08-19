@@ -1,0 +1,64 @@
+/dts-v1/;
+
+/ {
+    #size-cells = <2>;
+    #address-cells = <2>;
+
+    model = "Toradex Verdin iMX8M Plus WB (Bao)";
+    compatible = "toradex,verdin-imx8mp", "fsl,imx8mp";
+
+    aliases { serial2 = &uart3; };
+
+    chosen {
+        bootargs = "console=ttymxc2,115200 root=/dev/ram0 rw init=/sbin/init loglevel=8";
+        stdout-path = &uart3;
+    };
+
+    memory@80200000 {
+        device_type = "memory";
+        reg = <0x0 0x80200000 0x0 0x20000000>;
+    };
+
+    cpus {
+        #size-cells = <0>;
+        #address-cells = <1>;
+        cpu@0 {
+            device_type = "cpu";
+            compatible = "arm,cortex-a53";
+            enable-method = "psci";
+            reg = <0x0>;
+        };
+    };
+
+    psci { compatible = "arm,psci-0.2"; method = "smc"; };
+
+    gic: interrupt-controller@38800000 {
+        compatible = "arm,gic-v3";
+        #interrupt-cells = <3>;
+        interrupt-controller;
+        reg = <0x0 0x38800000 0x0 0x10000>,
+              <0x0 0x38880000 0x0 0x100000>;
+    };
+
+    timer {
+        compatible = "arm,armv8-timer";
+        interrupts = <1 13 0xf08>, <1 14 0xf08>, <1 11 0xf08>, <1 10 0xf08>;
+        interrupt-parent = <&gic>;
+    };
+
+    uart3: serial@30880000 {
+        compatible = "fsl,imx8mp-uart", "fsl,imx6q-uart";
+        reg = <0x0 0x30880000 0x0 0x10000>;
+        interrupts = <0 60 4>;
+        interrupt-parent = <&gic>;
+        clocks = <&dummy_clock>, <&dummy_clock>;
+        clock-names = "ipg", "per";
+        status = "okay";
+    };
+
+    dummy_clock: dummy_clock {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency = <24000000>;
+    };
+};
